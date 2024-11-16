@@ -6,36 +6,43 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from '@/components/ui/form'
+import { registerFormSchema } from '@/schema/user'
+import { registerUser } from '@/services/users'
 
 interface RegisterFormProps {
   email: string;
 }
 
 export default function RegisterForm({ email }: RegisterFormProps) {
-  const registerFormSchema = z.object({
-    email: z
-    .string()
-    .min(1, { message: "This field has to be filled." })
-    .email("This is not a valid email."),
-    password: z.string().min(1)
-  })
 
   const form = useForm<z.infer<typeof registerFormSchema>>({
     resolver: zodResolver(registerFormSchema),
     defaultValues: {
-      email: email,
-      password: ""
+      email: email || "" ,
+      name: "",
+      role: "",
+      password: "",
+      confirmPassword: ""
     },
   })
  
   async function onSubmit(values: z.infer<typeof registerFormSchema>) {
     try {
-      console.log("login", values)
-
+      const registrationData = {
+        name: values.name,
+        email: values.email,
+        role: values.role,
+        password: values.password,
+      }
+  
+      const result = await registerUser(registrationData)
+      console.log("User registered successfully:", result)
+  
     } catch (error) {
-      console.error("Error during submission:", error)
+      console.error("Error during registration:", error)
     }
   }
+
   return (
     <>
       <FormProvider {...form}>
@@ -45,7 +52,7 @@ export default function RegisterForm({ email }: RegisterFormProps) {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Let&apos;s Create your Account!</FormLabel>
+                <FormLabel>Email Address</FormLabel>
                 <FormControl>
                   <Input placeholder="you@example.com" {...field} />
                 </FormControl>
@@ -57,20 +64,67 @@ export default function RegisterForm({ email }: RegisterFormProps) {
 
           <FormField
             control={form.control}
-            name="password"
+            name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Set a password</FormLabel>
+                <FormLabel>Your Full Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="password" {...field} />
+                  <Input placeholder="Your Name" {...field} />
                 </FormControl>
-                <FormDescription> Almost there, just set up a strong password to create your account!</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
-          />  
+          />
+
+          <FormField
+            control={form.control}
+            name="role"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Role</FormLabel>
+                <FormControl>
+                  <select {...field} className="border border-gray-300 rounded-md p-2">
+                    <option value="">Select a role</option>
+                    <option value="doctor">Doctor</option>
+                    <option value="patient">Patient</option>
+                  </select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Set a Password</FormLabel>
+                <FormControl>
+                  <Input placeholder="password" type="password" {...field} />
+                </FormControl>
+                <FormDescription>Almost there! Set up a strong password.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Confirm Password</FormLabel>
+                <FormControl>
+                  <Input placeholder="Confirm password" type="password" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <Button type="submit" className="w-full">
-            Login <ArrowRight className="ml-2 h-4 w-4" />
+            Register <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </form>
       </FormProvider>
