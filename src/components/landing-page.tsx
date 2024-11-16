@@ -9,12 +9,18 @@ import Footer from '@/components/footer'
 import EmailForm from '@/components/auth-forms/email-form'
 import LoginForm from '@/components/auth-forms/login-form'
 import RegisterForm from './auth-forms/register-form'
+import RegisterSuccess from './dialogs/register-success'
 
 export function LandingPage() {
   const [showLogin, setShowLogin] = useState(false)
   const [email, setEmail] = useState('')
   const [step, setStep] = useState(0)
   const [isExistingUser, setIsExistingUser] = useState<boolean | null>(null)
+
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const handleRegisterSuccess = () => {
+    setDialogOpen(true)
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -63,7 +69,7 @@ export function LandingPage() {
                   {isExistingUser ? (
                     <LoginForm email={email} />
                   ) : (
-                    <RegisterForm email={email} />
+                    <RegisterForm email={email} onRegisterSuccess={handleRegisterSuccess}/>
                   )}
                 </div>
               )}
@@ -72,6 +78,9 @@ export function LandingPage() {
         )}
       </AnimatePresence>
       <Footer/>
+      
+      { dialogOpen && <RegisterSuccess dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} setShowLogin={setShowLogin} setIsExistingUser={setIsExistingUser}/> }
+      
     </div>
   )
 }

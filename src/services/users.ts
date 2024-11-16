@@ -1,41 +1,35 @@
+// services/user.ts
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+
+const fetchData = async (url: string, method: string, body?: object) => {
+  try {
+    const response = await fetch(`${API_URL}${url}`, {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+
+    if (!response.ok) {
+      throw new Error(`${method} request failed for ${url}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error in API request:", error);
+    throw error;
+  }
+};
+
 export const checkEmail = async (email: string) => {
-  try {
-    const response = await fetch("http://localhost:8080/api/users/exists", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email }),
-    });
+  return await fetchData("/api/users/exists", "POST", { email });
+};
 
-    if (!response.ok) {
-      throw new Error("Failed to check email existence")
-    }
+export const registerUser = async (data: { name: string; email: string; role: string; password: string }) => {
+  return await fetchData("/api/users/register", "POST", data);
+};
 
-    return await response.json()
-  } catch (error) {
-    console.error("Error checking email:", error)
-    throw error
-  }
-}
-
-export const registerUser = async (data: { name: string, email: string, role: string, password: string }) => {
-  try {
-    const response = await fetch("http://localhost:8080/api/users/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to register user")
-    }
-
-    return await response.json()
-  } catch (error) {
-    console.error("Error registering user:", error)
-    throw error
-  }
-}
+export const loginUser = async (data: { email: string; password: string }) => {
+  return await fetchData("/api/users/login", "POST", data);
+};
