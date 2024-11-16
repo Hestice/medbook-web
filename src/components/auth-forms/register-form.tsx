@@ -10,10 +10,11 @@ import { registerFormSchema } from '@/schema/user'
 import { registerUser } from '@/services/users'
 
 interface RegisterFormProps {
-  email: string;
+  email: string
+  onRegisterSuccess: () => void
 }
 
-export default function RegisterForm({ email }: RegisterFormProps) {
+export default function RegisterForm({ email, onRegisterSuccess }: RegisterFormProps) {
 
   const form = useForm<z.infer<typeof registerFormSchema>>({
     resolver: zodResolver(registerFormSchema),
@@ -37,6 +38,7 @@ export default function RegisterForm({ email }: RegisterFormProps) {
   
       const result = await registerUser(registrationData)
       console.log("User registered successfully:", result)
+      onRegisterSuccess()
   
     } catch (error) {
       console.error("Error during registration:", error)

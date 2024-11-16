@@ -7,6 +7,8 @@ import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from '@/components/ui/form'
 import { loginFormSchema } from '@/schema/user'
+import { loginUser } from '@/services/users'
+import { useRouter } from 'next/navigation'
 
 
 interface LoginFormProps {
@@ -14,6 +16,8 @@ interface LoginFormProps {
 }
 
 export default function LoginForm({ email }: LoginFormProps) {
+  const router = useRouter()
+  
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -24,12 +28,14 @@ export default function LoginForm({ email }: LoginFormProps) {
  
   async function onSubmit(values: z.infer<typeof loginFormSchema>) {
     try {
-      console.log("login", values)
-
+      const response = await loginUser(values)
+      console.log("Login successful:", response)
+      router.push('/dashboard')
     } catch (error) {
       console.error("Error during submission:", error)
     }
   }
+
   return (
     <>
       <FormProvider  {...form}>
@@ -56,9 +62,9 @@ export default function LoginForm({ email }: LoginFormProps) {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input placeholder="password" {...field} />
+                  <Input placeholder="Enter password" type="password" {...field} />
                 </FormControl>
-                <FormDescription> Please enter your password to log in.</FormDescription>
+                <FormDescription>Please enter your password to log in.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
