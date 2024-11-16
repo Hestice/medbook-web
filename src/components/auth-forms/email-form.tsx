@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 import { checkEmail } from "@/services/users"
+import { emailCheckFormSchema } from "@/schema/check-email"
 
 interface EmailFormProps {
   setEmail: React.Dispatch<React.SetStateAction<string>>
@@ -15,12 +16,6 @@ interface EmailFormProps {
 }
 
 export default function EmailForm({ setEmail, setIsExistingUser, setStep }: EmailFormProps) {
-  const emailCheckFormSchema = z.object({
-    email: z
-    .string()
-    .min(1, { message: "This field has to be filled." })
-    .email("This is not a valid email.")
-  })
 
   const form = useForm<z.infer<typeof emailCheckFormSchema>>({
     resolver: zodResolver(emailCheckFormSchema),

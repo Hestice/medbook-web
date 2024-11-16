@@ -16,9 +16,6 @@ export function LandingPage() {
   const [step, setStep] = useState(0)
   const [isExistingUser, setIsExistingUser] = useState<boolean | null>(null)
 
-  console.log("Email:", email)
-  console.log("Is Existing User:", isExistingUser)
-
   return (
     <div className="flex flex-col min-h-screen">
       <Navigation/>

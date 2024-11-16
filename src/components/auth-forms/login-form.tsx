@@ -6,6 +6,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from '@/components/ui/form'
+import { loginFormSchema } from '@/schema/user'
 
 
 interface LoginFormProps {
@@ -13,14 +14,6 @@ interface LoginFormProps {
 }
 
 export default function LoginForm({ email }: LoginFormProps) {
-  const loginFormSchema = z.object({
-    email: z
-    .string()
-    .min(1, { message: "This field has to be filled." })
-    .email("This is not a valid email."),
-    password: z.string().min(1)
-  })
-
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
