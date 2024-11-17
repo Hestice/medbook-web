@@ -14,7 +14,7 @@ export const fetchCurrentUser = async (): Promise<User | null> => {
     const data: User = await response.json()
     return data
   } catch (error) {
-    console.error('Error fetching user:', error)
+    console.log(error)
     return null
   }
 };
