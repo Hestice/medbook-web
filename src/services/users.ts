@@ -1,4 +1,3 @@
-// services/user.ts
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
 const fetchData = async (url: string, method: string, body?: object) => {
@@ -9,8 +8,9 @@ const fetchData = async (url: string, method: string, body?: object) => {
         "Content-Type": "application/json",
       },
       body: body ? JSON.stringify(body) : undefined,
+      credentials: 'include',
     });
-
+    console.log(response)
     if (!response.ok) {
       throw new Error(`${method} request failed for ${url}`);
     }

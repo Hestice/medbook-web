@@ -3,10 +3,11 @@ import React from 'react'
 
 export default function Navigation() {
   return (
-    <header className="flex justify-center items-center py-4 lg:py-6">
+   <header className="flex justify-center items-center py-4 lg:py-6 sticky top-0 bg-white/30 backdrop-blur-md border-b-2 border-gray-100">
+
       <nav className="bg-white shadow-md rounded-xl overflow-hidden">
         <ul className="flex divide-x divide-gray-100">
-          {['Home', 'Services', 'About', 'Contact'].map((item, index) => ( //TODO: refactor to use Enum as routes
+          {['Dashboard', 'Services', 'About', 'Contact'].map((item, index) => ( //TODO: refactor to use Enum as routes
             <li key={item} className={`flex-1 ${index === 0 ? 'rounded-l-xl' : ''} ${index === 3 ? 'rounded-r-xl' : ''}`}>
               <Link 
                 href={`/${item.toLowerCase()}`} 

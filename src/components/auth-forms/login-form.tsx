@@ -30,7 +30,11 @@ export default function LoginForm({ email }: LoginFormProps) {
     try {
       const response = await loginUser(values)
       console.log("Login successful:", response)
-      router.push('/dashboard')
+      if (response) {
+        router.push('/dashboard');
+      } else {
+        throw new Error('Login failed');
+      }
     } catch (error) {
       console.error("Error during submission:", error)
     }
