@@ -1,23 +1,23 @@
-'use client';
-import { useCurrentUser } from '@/hooks/use-current-user';
-import Link from 'next/link';
-import React from 'react';
-import { Role } from '@/enums/role';
-import { Route } from '@/enums/route';
-import { logout } from '@/services/logout-service'; // Import the logout function
+'use client'
+import { useCurrentUser } from '@/hooks/use-current-user'
+import Link from 'next/link'
+import React from 'react'
+import { Role } from '@/enums/role'
+import { Route } from '@/enums/route'
+import { logout } from '@/services/logout-service'
 
 export default function Navigation() {
-  const { user, loading } = useCurrentUser();
+  const { user, loading } = useCurrentUser()
 
-  const defaultRoutes = [Route.Home, Route.Services, Route.About, Route.Contact];
-  const doctorRoutes = [Route.Dashboard, Route.Profile, Route.Schedule, Route.Appointments, Route.Logout];
-  const patientRoutes = [Route.Dashboard, Route.Profile, Route.Appointments, Route.Logout];
+  const defaultRoutes = [Route.Home, Route.Services, Route.About, Route.Contact]
+  const doctorRoutes = [Route.Dashboard, Route.Profile, Route.Schedule, Route.Appointments, Route.Logout]
+  const patientRoutes = [Route.Dashboard, Route.Profile, Route.Appointments, Route.Logout]
 
-  let navItems = defaultRoutes;
+  let navItems = defaultRoutes
   if (user?.role === Role.Doctor) {
-    navItems = doctorRoutes;
+    navItems = doctorRoutes
   } else if (user?.role === Role.Patient) {
-    navItems = patientRoutes;
+    navItems = patientRoutes
   }
 
   if (loading) return
@@ -67,5 +67,5 @@ export default function Navigation() {
         </ul>
       </nav>
     </header>
-  );
+  )
 }
