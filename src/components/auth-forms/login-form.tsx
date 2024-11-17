@@ -7,7 +7,7 @@ import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from '@/components/ui/form'
 import { loginFormSchema } from '@/schema/user'
-import { loginUser } from '@/services/users'
+import { loginUser } from '@/services/user-service'
 import { useRouter } from 'next/navigation'
 
 

@@ -6,7 +6,7 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
-import { checkEmail } from "@/services/users"
+import { checkEmail } from "@/services/user-service"
 import { emailCheckFormSchema } from "@/schema/check-email"
 
 interface EmailFormProps {

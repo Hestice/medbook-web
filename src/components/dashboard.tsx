@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+<<<<<<< Updated upstream
 import { PlusCircleIcon } from 'lucide-react'
 import { Calendar } from '@/components/ui/calendar'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -14,10 +15,18 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { upcomingAppointments } from '@/constants/appointments'
 import { availableSlots } from '@/constants/availableSlots'
 import { formatDate } from '@/utils/date-utils'
+=======
+import UpcomingAppointmentsCard from './dashboard-cards/upcoming-appointments'
+import AvailableSlotsCard from './dashboard-cards/available-slots'
+import BookAppointmentCard from './dashboard-cards/book-appointment'
+import GetCurrentUser from '@/hooks/use-current-user'
+>>>>>>> Stashed changes
 
 export function DashboardComponent() {
-  const [date, setDate] = useState<Date | undefined>(new Date())
+  const [date, setDate] = useState<Date | undefined>(new Date())  
 
+  const userWithAbilities = GetCurrentUser()
+  console.log(userWithAbilities)
   return (
     <div className="container mx-auto p-6 space-y-8">
       <h1 className="text-3xl font-bold text-primary mb-6">Welcome back! Let&apos;s take care of your health.</h1>
