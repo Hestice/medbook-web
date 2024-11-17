@@ -7,7 +7,7 @@ import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from '@/components/ui/form'
 import { registerFormSchema } from '@/schema/user'
-import { registerUser } from '@/services/users'
+import { registerUser } from '@/services/user-service'
 
 interface RegisterFormProps {
   email: string
