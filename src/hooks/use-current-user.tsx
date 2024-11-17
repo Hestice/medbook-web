@@ -1,25 +1,50 @@
 import { User } from '@/types/user';
 import { fetchCurrentUser } from '@/utils/current-user';
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
-export default function GetCurrentUser() {
+export function useCurrentUser() {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const router = useRouter()
+
+  const fetchUserData = async () => {
+    try {
+      const userData = await fetchCurrentUser()
+      return userData;
+    } catch (error) {
+      console.error('Failed to load user data', error)
+      return null;
+    }
+  };
 
   useEffect(() => {
-    const getUserData = async () => {
-      try {
-        const userData = await fetchCurrentUser();
-        if (userData) {
-          setUser(userData);
-        } else {
-          console.log('No user logged in or session expired');
-        }
-      } catch (error) {
-        console.log('Failed to load user data', error);
-      }
+    const redirectToHome = () => {
+      console.log('No user logged in or session expired')
+      router.push('/');
     };
 
-    getUserData();
-  }, []);
-  return user
+    const redirectToDashboard = () => {
+      console.log('User is already logged in, redirecting to dashboard')
+      router.push('/dashboard');
+    };
+
+    const getUserData = async () => {
+      const userData = await fetchUserData()
+  
+      if (!userData) {
+        redirectToHome()
+      } else {
+        setUser(userData)
+        redirectToDashboard()
+      }
+      setLoading(false)
+    };
+
+    if (loading) {
+      getUserData()
+    }
+  }, [loading, router])
+
+  return { user, loading }
 }
