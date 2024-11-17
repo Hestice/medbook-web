@@ -10,23 +10,29 @@ import { toast } from '@/hooks/use-toast'
 
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
+import { useCurrentUser } from '@/hooks/use-current-user'
+import { Role } from '@/enums/role'
+import { createAvailabilities } from '@/services/availability-service'
+import { populateScheduler } from '@/hooks/populate-scheduler'
+import { CalendarEvent } from '@/types/calendar-event'
 
 moment.locale('en-GB')
 const localizer = momentLocalizer(moment)
 
-// Define event type
-interface CalendarEvent {
-  start: Date | string
-  end: Date | string
-  title: string
-}
-
 const DnDCalendar = withDragAndDrop<CalendarEvent>(Calendar<CalendarEvent>)
+
 
 export function WeeklyAvailabilitySchedulerComponent() {
   const [events, setEvents] = useState<CalendarEvent[]>([])
   const [originalEvents, setOriginalEvents] = useState<CalendarEvent[]>([])
   const [hasChanges, setHasChanges] = useState(false)
+
+  const { user } = useCurrentUser()
+  const doctorId = user?.role === Role.Doctor ? user.uuid : null
+
+  useEffect(() => {
+    populateScheduler({setOriginalEvents})
+  }, []);
 
   useEffect(() => {
     setHasChanges(JSON.stringify(events) !== JSON.stringify(originalEvents))
@@ -65,18 +71,37 @@ export function WeeklyAvailabilitySchedulerComponent() {
 
   const removeEvent = useCallback(
     (eventToRemove: CalendarEvent) => {
-      setEvents(events.filter((event) => event !== eventToRemove))
+      setEvents(events.filter(event =>
+        event.start !== eventToRemove.start || event.end !== eventToRemove.end
+      ))
     },
     [events]
   )
 
   const handleSave = () => {
-    setOriginalEvents(events)
-    setHasChanges(false)
-    toast({
-      title: "Availability saved",
-      description: "Your weekly schedule has been updated.",
-    })
+    const availabilityData = events.map(event => ({
+      doctorId: doctorId ? doctorId : "",
+      availableFrom: moment(event.start).format('YYYY-MM-DD HH:mm:ss'),
+      availableTo: moment(event.end).format('YYYY-MM-DD HH:mm:ss'),
+    }))
+    console.log(availabilityData)
+    createAvailabilities(availabilityData)
+      .then(() => {
+        setOriginalEvents(events)
+        setHasChanges(false)
+        toast({
+          title: 'Availability saved',
+          description: 'Your weekly schedule has been updated.',
+        })
+      })
+      .catch((error) => {
+        toast({
+          title: 'Error saving availability',
+          description: 'There was an issue saving your availability.',
+          variant: 'destructive',
+        })
+        console.error('Error creating availabilities:', error)
+      })
   }
 
   const handleDiscard = () => {
