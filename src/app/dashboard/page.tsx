@@ -1,7 +1,8 @@
+import { DashboardComponent } from '@/components/dashboard'
 import React from 'react'
 
 export default function index() {
   return (
-    <div>dashboard page</div>
+    <DashboardComponent/>
   )
 }
