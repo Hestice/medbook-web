@@ -30,7 +30,6 @@ export default function EmailForm({ setEmail, setIsExistingUser, setStep }: Emai
       const data = await checkEmail(values.email)
       setIsExistingUser(data.exists)
       setStep(1)
-      console.log(data.exists,"email checking")
     } catch (error) {
       console.error("Error during submission:", error)
     }

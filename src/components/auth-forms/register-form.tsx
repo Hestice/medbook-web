@@ -36,8 +36,7 @@ export default function RegisterForm({ email, onRegisterSuccess }: RegisterFormP
         password: values.password,
       }
   
-      const result = await registerUser(registrationData)
-      console.log("User registered successfully:", result)
+      await registerUser(registrationData)
       onRegisterSuccess()
   
     } catch (error) {

@@ -11,23 +11,21 @@ export function useCurrentUser() {
   const fetchUserData = async () => {
     try {
       const userData = await fetchCurrentUser()
-      return userData;
+      return userData
     } catch (error) {
       console.error('Failed to load user data', error)
-      return null;
+      return null
     }
   };
 
   useEffect(() => {
     const redirectToHome = () => {
-      console.log('No user logged in or session expired')
-      router.push('/');
-    };
+      router.push('/')
+    }
 
     const redirectToDashboard = () => {
-      console.log('User is already logged in, redirecting to dashboard')
-      router.push('/dashboard');
-    };
+      router.push('/dashboard')
+    }
 
     const getUserData = async () => {
       const userData = await fetchUserData()
@@ -39,7 +37,7 @@ export function useCurrentUser() {
         redirectToDashboard()
       }
       setLoading(false)
-    };
+    }
 
     if (loading) {
       getUserData()
