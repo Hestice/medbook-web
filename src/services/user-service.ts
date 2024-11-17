@@ -9,27 +9,26 @@ const fetchData = async (url: string, method: string, body?: object) => {
       },
       body: body ? JSON.stringify(body) : undefined,
       credentials: 'include',
-    });
-    console.log(response)
+    })
     if (!response.ok) {
-      throw new Error(`${method} request failed for ${url}`);
+      throw new Error(`${method} request failed for ${url}`)
     }
 
-    return await response.json();
+    return await response.json()
   } catch (error) {
-    console.error("Error in API request:", error);
+    console.error("Error in API request:", error)
     throw error;
   }
 };
 
 export const checkEmail = async (email: string) => {
-  return await fetchData("/api/users/exists", "POST", { email });
+  return await fetchData("/api/users/exists", "POST", { email })
 };
 
 export const registerUser = async (data: { name: string; email: string; role: string; password: string }) => {
-  return await fetchData("/api/users/register", "POST", data);
+  return await fetchData("/api/users/register", "POST", data)
 };
 
 export const loginUser = async (data: { email: string; password: string }) => {
-  return await fetchData("/api/users/login", "POST", data);
+  return await fetchData("/api/users/login", "POST", data)
 };

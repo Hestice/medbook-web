@@ -29,7 +29,6 @@ export default function LoginForm({ email }: LoginFormProps) {
   async function onSubmit(values: z.infer<typeof loginFormSchema>) {
     try {
       const response = await loginUser(values)
-      console.log("Login successful:", response)
       if (response) {
         router.push('/dashboard');
       } else {

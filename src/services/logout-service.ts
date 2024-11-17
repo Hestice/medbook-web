@@ -6,7 +6,6 @@ export const logout = async () => {
     });
 
     if (response.ok) {
-      console.log('Logged out successfully')
       window.location.href = '/'
     } else {
       console.error('Failed to log out')

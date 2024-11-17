@@ -5,12 +5,12 @@ import UpcomingAppointmentsCard from './dashboard-cards/upcoming-appointments'
 import AvailableSlotsCard from './dashboard-cards/available-slots'
 import BookAppointmentCard from './dashboard-cards/book-appointment'
 import { useCurrentUser } from '@/hooks/use-current-user'
+import { WeeklyAvailabilitySchedulerComponent } from './weekly-availability-scheduler'
 
 export function DashboardComponent() {
   const [date, setDate] = useState<Date | undefined>(new Date())  
 
   const { user, loading } = useCurrentUser()
-  console.log(user)
   if (loading) return <div className='items-center justify-center'>Loading...</div>
 
   const name = user?.name
@@ -24,6 +24,7 @@ export function DashboardComponent() {
       <UpcomingAppointmentsCard/>
       <AvailableSlotsCard/>
       <BookAppointmentCard date={date} setDate={setDate}/>
+      <WeeklyAvailabilitySchedulerComponent/>
     </div>
   )
 }
