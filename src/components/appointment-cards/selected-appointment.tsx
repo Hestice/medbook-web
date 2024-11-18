@@ -10,7 +10,7 @@ interface SelectedAppointmentProps {
   selectedAppointment: Appointment | null
   newComment: string
   setNewComment: React.Dispatch<React.SetStateAction<string>>
-  handleDeleteAppointment: (id: number) => void
+  handleDeleteAppointment: () => void
   handleAddComment: () => void
 }
 
@@ -41,7 +41,7 @@ export default function SelectedAppointment({
           <Button
             variant="destructive"
             size="sm"
-            onClick={() => handleDeleteAppointment(selectedAppointment.id)}
+            onClick={() => handleDeleteAppointment()}
           >
             <Trash2 className="w-4 h-4 mr-2" />
             Delete
