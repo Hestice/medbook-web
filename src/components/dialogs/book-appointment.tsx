@@ -81,6 +81,7 @@ export default function BookAppointmentDialog({ slot, user, onAppointmentBooked 
                       type="date" 
                       placeholder="Select date"
                       {...field}
+                      disabled={!!slot.date}
                       onChange={(e) => {
                         field.onChange(e);
                         handleDateChange(e.target.value);
