@@ -69,7 +69,7 @@ export const listPaginatedAvailabilities = async (
       total: 0,
       page,
       per_page: perPage,
-      items: [],
+      availabilities: [],
     }
   }
 }
