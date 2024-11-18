@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Slot } from '@/types/availability'
 import { Input } from '@/components/ui/input'
@@ -10,20 +10,26 @@ import { z } from 'zod'
 import { bookAppointmentSchema } from '@/schema/book-appointment'
 import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from '@/components/ui/form'
 import { ArrowRight } from 'lucide-react'
-import { convertTo24HourFormat } from '@/utils/date-utils'
+import { convertDateToISO, convertTo24HourFormat, formatReadableDate } from '@/utils/date-utils'
 import { User } from '@/types/user'
+import { buildPayload } from '@/constants/appointments'
+import { bookAppointment } from '@/services/appointment-service'
 
 interface BookAppointmentDialogProps {
   slot: Slot
   user: User
+  onAppointmentBooked: () => void
 }
 
-export default function BookAppointmentDialog({ slot, user }: BookAppointmentDialogProps) {
+export default function BookAppointmentDialog({ slot, user, onAppointmentBooked }: BookAppointmentDialogProps) {
   const name = user?.name
+  const [readableDate, setReadableDate] = useState(formatReadableDate(slot.date))
+
   const form = useForm<z.infer<typeof bookAppointmentSchema>>({
     resolver: zodResolver(bookAppointmentSchema),
     defaultValues: {
       name: name, 
+      date: convertDateToISO(slot.date),
       from: convertTo24HourFormat(slot.timeFrom),
       to: convertTo24HourFormat(slot.timeTo),  
     },
@@ -34,11 +40,23 @@ export default function BookAppointmentDialog({ slot, user }: BookAppointmentDia
     form.setValue('to', convertTo24HourFormat(slot.timeTo))
   }, [slot, form]);
 
-
-  async function onSubmit(values: z.infer<typeof bookAppointmentSchema>) {
-    console.log(values)
+  const handleDateChange = (date: string) => {
+    setReadableDate(formatReadableDate(date));
   }
 
+  async function onSubmit(values: z.infer<typeof bookAppointmentSchema>) {
+    const payload = buildPayload(values, slot, user);
+    console.log(payload);
+
+    try {
+      const response = await bookAppointment(payload);
+      console.log('Appointment booked successfully:', response);
+      onAppointmentBooked()
+    } catch (error) {
+      console.error('Error booking appointment:', error);
+    }
+  }
+  
   const renderBookAppointmentForm = () => (
     <>
       <FormProvider {...form}>
@@ -47,9 +65,32 @@ export default function BookAppointmentDialog({ slot, user }: BookAppointmentDia
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="Marcus Dela Cruz" {...field} />
+                <Input placeholder={name} {...field} />
               </FormControl>
               <FormDescription>What is your name?</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )} />
+
+          <FormField control={form.control} name="date" render={({ field }) => (
+            <FormItem className='flex flex-col'>
+              <FormLabel>Date</FormLabel>
+              <div className="flex flex-row gap-2 items-center justify-start">
+                <FormControl className='w-fit'>
+                    <Input
+                      type="date" 
+                      placeholder="Select date"
+                      {...field}
+                      disabled={!!slot.date}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        handleDateChange(e.target.value);
+                      }}
+                    />
+                </FormControl>
+                <FormDescription>{readableDate}</FormDescription> 
+              </div>
+              
               <FormMessage />
             </FormItem>
           )} />

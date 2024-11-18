@@ -49,4 +49,17 @@ export const convertTo24HourFormat = (time: string) => {
   }
 
   return `${hour24.toString().padStart(2, '0')}:${timeValue.padStart(2, '0')}`;
-};
+}
+
+export const convertDateToISO =(date: string) => {
+  const dateObj = new Date(date);
+  const year = dateObj.getFullYear();
+  const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const day = String(dateObj.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+export const formatReadableDate = (dateString: string)=> {
+  const dateObj = new Date(dateString);
+  return dateObj.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}

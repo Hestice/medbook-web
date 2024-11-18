@@ -10,6 +10,7 @@ export interface Doctor {
 }
 export interface Slot {
   id: string
+  doctorId: string,
   doctor: string
   date: string
   timeFrom: string

@@ -7,28 +7,31 @@ import { fetchAvailableSlots } from '@/utils/doctor-availability'
 import BookAppointmentDialog from '../dialogs/book-appointment'
 import { useCurrentUser } from '@/hooks/use-current-user'
 
-
 export default function AvailableSlotsCard() {
   const [slots, setSlots] = useState<Slot[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const { user } = useCurrentUser()
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false)
+
+  const loadSlots = async () => {
+    setLoading(true)
+    const fetchedSlots = await fetchAvailableSlots()
+    setSlots(fetchedSlots)
+    setLoading(false)
+  }
 
   useEffect(() => {
-    const loadSlots = async () => {
-      setLoading(true)
-      const fetchedSlots = await fetchAvailableSlots()
-      setSlots(fetchedSlots)
-      setLoading(false)
-    }
-
     loadSlots()
-  }, [])
+  }, []) 
+
+  const handleAppointmentBooked = () => {
+    setDialogOpen(false) 
+    loadSlots()           
+  }
 
   if (loading) {
     return <div>Loading...</div>
   }
-
-  console.log(slots)
 
   return (
     <Card>
@@ -46,11 +49,11 @@ export default function AvailableSlotsCard() {
               <p className="font-medium">{slot.date}</p>
               <p className="text-sm text-muted-foreground">{slot.timeFrom}</p>
             </div>
-            <Dialog>
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger asChild>
                 <Button variant="outline">Book Now</Button>
               </DialogTrigger>
-              {user && <BookAppointmentDialog slot={slot} user={user}/>}
+              {user && <BookAppointmentDialog slot={slot} user={user} onAppointmentBooked={handleAppointmentBooked}/>}
             </Dialog>
           </div>
         ))}
