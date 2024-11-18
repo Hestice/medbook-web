@@ -11,13 +11,15 @@ export const fetchAvailableSlots = async (
     const slots = await Promise.all(
       availabilitiesResponse.availabilities.map(async (availability) => {
         const doctor = await getDoctorDetails(availability.doctorId)
-        const { formattedDate, formattedTime } = formatDateTime(availability.availableFrom)
+        const { formattedDate, formattedTime: formattedTimeFrom } = formatDateTime(availability.availableFrom)
+        const { formattedTime: formattedTimeTo } = formatDateTime(availability.availableTo)
         return {
-          id: availability.id,
+          id: availability.id || '',
           doctorId: availability.doctorId,
           doctor: doctor.name,
           date: formattedDate,
-          time: formattedTime
+          timeFrom: formattedTimeFrom,
+          timeTo: formattedTimeTo
         }
       })
     )

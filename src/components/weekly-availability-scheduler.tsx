@@ -84,7 +84,6 @@ export function WeeklyAvailabilitySchedulerComponent() {
       availableFrom: moment(event.start).format('YYYY-MM-DD HH:mm:ss'),
       availableTo: moment(event.end).format('YYYY-MM-DD HH:mm:ss'),
     }))
-    console.log(availabilityData)
     createAvailabilities(availabilityData)
       .then(() => {
         setOriginalEvents(events)

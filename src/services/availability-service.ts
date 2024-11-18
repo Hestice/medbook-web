@@ -13,7 +13,6 @@ export const createAvailabilities = async (availabilities: Availability[]) => {
       body: JSON.stringify(availabilities),
       credentials: 'include',
     })
-    console.log(availabilities)
     if (!response.ok) {
       throw new Error('Failed to create availabilities')
     }
