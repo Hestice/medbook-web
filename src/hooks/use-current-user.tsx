@@ -6,43 +6,43 @@ import { useRouter } from 'next/navigation';
 export function useCurrentUser() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const router = useRouter()
+  const router = useRouter();
 
   const fetchUserData = async () => {
     try {
-      const userData = await fetchCurrentUser()
-      return userData
+      const userData = await fetchCurrentUser();
+      return userData;
     } catch (error) {
-      console.error('Failed to load user data', error)
-      return null
+      console.error('Failed to load user data', error);
+      return null;
     }
   };
 
   useEffect(() => {
     const redirectToHome = () => {
       router.push('/')
-    }
-
-    const redirectToDashboard = () => {
-      router.push('/dashboard')
-    }
+    };
 
     const getUserData = async () => {
-      const userData = await fetchUserData()
+      const userData = await fetchUserData();
   
       if (!userData) {
-        redirectToHome()
+        if (window.location.pathname !== '/') {
+          redirectToHome();
+        }
       } else {
-        setUser(userData)
-        redirectToDashboard()
+        setUser(userData);
+        if (window.location.pathname === '/') {
+          router.push('/dashboard');
+        }
       }
-      setLoading(false)
-    }
+      setLoading(false);
+    };
 
     if (loading) {
-      getUserData()
+      getUserData();
     }
-  }, [loading, router])
+  }, [loading, router]);
 
-  return { user, loading }
+  return { user, loading };
 }

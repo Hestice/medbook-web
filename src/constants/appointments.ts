@@ -13,7 +13,7 @@ export function buildPayload(values: z.infer<typeof bookAppointmentSchema>, slot
   const { name, date, from, to } = values;
 
   return {
-    patientId: user?.role === Role.Patient ? user.uuid : null,
+      patientId: user?.role === Role.Patient ? user.uuid : null,
       doctorId: slot.doctorId,
       availabilityId: slot.id,
       from: `${date} ${from}:00`,
