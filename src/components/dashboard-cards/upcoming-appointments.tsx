@@ -3,8 +3,14 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { formatDate } from '@/utils/date-utils'
 import React from 'react'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../ui/card'
+import { Role } from '@/enums/role'
 
-export default function UpcomingAppointmentsCard() {
+interface UpcomingAppointmentsProps {
+  role? : Role
+}
+
+export default function UpcomingAppointmentsCard({role}: UpcomingAppointmentsProps) {
+  const userRole = role
   return (
     <Card>
         <CardHeader>

@@ -115,7 +115,7 @@ export function WeeklyAvailabilitySchedulerComponent() {
   }
 
   return (
-    <Card className="w-full max-w-4xl mx-auto">
+    <Card className="w-full mx-auto">
       <CardHeader>
         <div className="flex justify-between items-center">
           <CardTitle className="text-2xl font-bold text-primary">Set Your Weekly Availability</CardTitle>
