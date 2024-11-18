@@ -17,12 +17,9 @@ export const convertToISOString = (dateStr: string): string => {
 }
 
 export const convertToDate = (dateStr: string): Date => {
-  console.log(dateStr)
   const dateParts = dateStr.split(' ')
   const [date, time] = dateParts
   const formattedDate = `${date}T${time}`
-  console.log(formattedDate)
-  console.log(new Date(formattedDate))
   return new Date(formattedDate)
 }
 
@@ -39,3 +36,17 @@ export const formatDateTime = (dateString: string) => {
   })
   return { formattedDate, formattedTime }
 }
+
+export const convertTo24HourFormat = (time: string) => {
+  const [hour, minute] = time.split(':');
+  const [timeValue, period] = minute.split(' ');
+  let hour24 = parseInt(hour, 10);
+
+  if (period === 'PM' && hour24 < 12) {
+    hour24 += 12
+  } else if (period === 'AM' && hour24 === 12) {
+    hour24 = 0
+  }
+
+  return `${hour24.toString().padStart(2, '0')}:${timeValue.padStart(2, '0')}`;
+};

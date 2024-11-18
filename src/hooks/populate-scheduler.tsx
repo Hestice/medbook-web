@@ -9,7 +9,6 @@ interface PopulateSchedulerInterface {
 export const populateScheduler = async ({ setOriginalEvents }: PopulateSchedulerInterface) => {
   try {
     const availabilities = await listAvailabilities();
-    console.log(availabilities)
     const mappedEvents = availabilities.map((availability) => {
       return {
         start: convertToDate(availability.availableFrom),
@@ -18,7 +17,6 @@ export const populateScheduler = async ({ setOriginalEvents }: PopulateScheduler
       };
     });
     setOriginalEvents(mappedEvents);
-    console.log(mappedEvents)
   } catch (error) {
     console.error('Error fetching and populating events:', error);
   }

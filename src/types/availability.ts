@@ -1,5 +1,5 @@
 export interface Availability {
-  id: string;
+  id?: string;
   doctorId: string
   availableFrom: string
   availableTo: string
@@ -12,5 +12,6 @@ export interface Slot {
   id: string
   doctor: string
   date: string
-  time: string
+  timeFrom: string
+  timeTo: string
 }
