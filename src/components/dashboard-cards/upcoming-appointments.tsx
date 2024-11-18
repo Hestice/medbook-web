@@ -9,8 +9,7 @@ interface UpcomingAppointmentsProps {
   role? : Role
 }
 
-export default function UpcomingAppointmentsCard({role}: UpcomingAppointmentsProps) {
-  const userRole = role
+export default function UpcomingAppointmentsCard({}: UpcomingAppointmentsProps) {
   return (
     <Card>
         <CardHeader>
