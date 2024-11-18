@@ -24,4 +24,18 @@ export const convertToDate = (dateStr: string): Date => {
   console.log(formattedDate)
   console.log(new Date(formattedDate))
   return new Date(formattedDate)
-};
+}
+
+export const formatDateTime = (dateString: string) => {
+  const date = new Date(dateString)
+  const formattedDate = date.toLocaleDateString([], {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+  const formattedTime = date.toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+  return { formattedDate, formattedTime }
+}
