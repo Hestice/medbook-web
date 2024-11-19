@@ -63,3 +63,11 @@ export const formatReadableDate = (dateString: string)=> {
   const dateObj = new Date(dateString);
   return dateObj.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 }
+
+export const formatDateForForm = (date: string): string => {
+  const singaporeDate = new Date(date).toLocaleDateString('en-GB', {
+    timeZone: 'Asia/Singapore',
+  });
+  const [day, month, year] = singaporeDate.split('/');
+  return `${year}-${month}-${day}`;
+};

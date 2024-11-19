@@ -77,7 +77,6 @@ export function AppointmentsPage() {
       setNewComment('')
     }
   }
-
   const filteredAppointments = dateRange?.from && dateRange?.to
     ? appointments.filter((apt) => {
         const aptDate = parseISO(apt.date)
@@ -141,7 +140,7 @@ export function AppointmentsPage() {
       <DeleteConfirmation
         dialogOpen={dialogOpen}
         setDialogOpen={setDialogOpen}
-        handleDelete={() => selectedAppointment && handleDeleteAppointment(selectedAppointment.id)} // Pass the id to delete
+        handleDelete={() => selectedAppointment && handleDeleteAppointment(selectedAppointment.id)}
       />
     </div>
   )

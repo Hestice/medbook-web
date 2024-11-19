@@ -15,7 +15,7 @@ export default function AppointmentCard( {paginatedAppointments, setSelectedAppo
             <CardHeader>
               <div className="flex justify-between items-center">
                 <CardTitle>{apt.title}</CardTitle>
-                <span className="text-sm text-muted-foreground">{apt.date} at {apt.time}</span>
+                <span className="text-sm text-muted-foreground">{apt.date} at {apt.time_start}</span>
               </div>
             </CardHeader>
             <CardContent>

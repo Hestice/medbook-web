@@ -46,7 +46,6 @@ export default function BookAppointmentDialog({ slot, user, onAppointmentBooked 
 
   async function onSubmit(values: z.infer<typeof bookAppointmentSchema>) {
     const payload = buildPayload(values, slot, user);
-    console.log(payload);
 
     try {
       const response = await bookAppointment(payload);

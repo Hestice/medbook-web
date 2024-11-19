@@ -21,3 +21,15 @@ export function buildPayload(values: z.infer<typeof bookAppointmentSchema>, slot
       patient_name: name,
   };
 }
+
+export function editAppointmentPayload(values: z.infer<typeof bookAppointmentSchema>, availabilityId?: string) {
+  const { name, date, from, to, comment } = values;
+
+  return {
+    time_start: `${date} ${from}:00`, 
+    time_end: `${date} ${to}:00`,
+    patient_name: name,
+    comment: comment || "",
+    availabilityId: availabilityId || undefined,
+  };
+}
