@@ -11,7 +11,7 @@ export default function AvailableSlotsCard() {
   const [slots, setSlots] = useState<Slot[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const { user } = useCurrentUser()
-  const [dialogOpen, setDialogOpen] = useState<boolean>(false)
+  const [dialogStates, setDialogStates] = useState<{ [key: string]: boolean }>({})
 
   const loadSlots = async () => {
     setLoading(true)
@@ -22,11 +22,17 @@ export default function AvailableSlotsCard() {
 
   useEffect(() => {
     loadSlots()
-  }, []) 
+  }, [])
 
   const handleAppointmentBooked = () => {
-    setDialogOpen(false) 
-    loadSlots()           
+    loadSlots()
+  }
+
+  const toggleDialog = (slotId: string) => {
+    setDialogStates(prevStates => ({
+      ...prevStates,
+      [slotId]: !prevStates[slotId],
+    }))
   }
 
   if (loading) {
@@ -49,11 +55,11 @@ export default function AvailableSlotsCard() {
               <p className="font-medium">{slot.date}</p>
               <p className="text-sm text-muted-foreground">{slot.timeFrom}</p>
             </div>
-            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <Dialog open={dialogStates[slot.id] || false} onOpenChange={() => toggleDialog(slot.id)}>
               <DialogTrigger asChild>
                 <Button variant="outline">Book Now</Button>
               </DialogTrigger>
-              {user && <BookAppointmentDialog slot={slot} user={user} onAppointmentBooked={handleAppointmentBooked}/>}
+              {user && <BookAppointmentDialog slot={slot} user={user} onAppointmentBooked={handleAppointmentBooked} />}
             </Dialog>
           </div>
         ))}
