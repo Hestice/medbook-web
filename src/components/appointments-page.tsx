@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { format, parseISO, isWithinInterval, addDays } from 'date-fns'
+import { useEffect, useState } from 'react'
+import { parseISO, isWithinInterval, addDays } from 'date-fns'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import type { DateRange } from "react-day-picker"
 import { Appointment } from '@/types/appointment-type'
@@ -9,21 +9,13 @@ import DateRangePicker from '@/components/appointment-cards/date-range-filter'
 import AppointmentCard from '@/components/appointment-cards/appointment-card'
 import AppointmentPagination from '@/components/appointment-cards/appointment-pagination'
 import SelectedAppointment from '@/components/appointment-cards/selected-appointment'
+import { deleteAppointment, listAppointments } from '@/services/appointment-service'
+import DeleteConfirmation from './dialogs/delete-confirmation'
 
 const ITEMS_PER_PAGE = 5
 
-//sample data
-const initialAppointments: Appointment[] = Array.from({ length: 50 }, (_, i) => ({
-  id: i + 1,
-  title: `Appointment ${i + 1}`,
-  date: format(addDays(new Date(), i), 'yyyy-MM-dd'),
-  time: `${Math.floor(Math.random() * 12 + 9)}:00`,
-  doctor: `Dr. ${['Smith', 'Johnson', 'Williams', 'Brown', 'Davis'][Math.floor(Math.random() * 5)]}`,
-  comments: [],
-}))
-
 export function AppointmentsPage() {
-  const [appointments, setAppointments] = useState<Appointment[]>(initialAppointments)
+  const [appointments, setAppointments] = useState<Appointment[]>([])
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null)
   const [newComment, setNewComment] = useState('')
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
@@ -31,11 +23,35 @@ export function AppointmentsPage() {
     to: addDays(new Date(), 7)
   })
   const [currentPage, setCurrentPage] = useState(1)
+  const [loading, setLoading] = useState(true)
+  const [dialogOpen, setDialogOpen] = useState(false)
 
-  const handleDeleteAppointment = (id: number) => {
-    setAppointments(appointments.filter((apt) => apt.id !== id))
-    setSelectedAppointment(null)
+  const fetchAppointments = async () => {
+    try {
+      setLoading(true)
+      const fetchedAppointments = await listAppointments()
+      setAppointments(fetchedAppointments)
+    } catch (error) {
+      console.error('Error fetching appointments:', error)
+    } finally {
+      setLoading(false)
+    }
   }
+
+  useEffect(() => {
+    fetchAppointments()
+  }, []) 
+
+  const handleDeleteAppointment = async (id: number) => {
+    try {
+      await deleteAppointment(id)
+      await fetchAppointments()
+      setSelectedAppointment(null)
+    } catch (error) {
+      console.error('Error deleting appointment:', error)
+    }
+  }
+
 
   const handleAddComment = () => {
     if (newComment.trim() && selectedAppointment) {
@@ -87,13 +103,21 @@ export function AppointmentsPage() {
                 <DateRangePicker dateRange={dateRange} setDateRange={setDateRange}/>
               </div>
             </CardHeader>
-            <AppointmentCard paginatedAppointments={paginatedAppointments} setSelectedAppointment={setSelectedAppointment}/>
-            <AppointmentPagination
-              filteredAppointments={filteredAppointments}
-              currentPage={currentPage}
-              totalPages={totalPages}
-              setCurrentPage={setCurrentPage}
-            />
+            {loading ? (
+              <CardContent className="flex items-center justify-center h-full">
+                <p>Loading appointments...</p>
+              </CardContent>
+            ) : (
+              <>
+                <AppointmentCard paginatedAppointments={paginatedAppointments} setSelectedAppointment={setSelectedAppointment}/>
+                <AppointmentPagination
+                  filteredAppointments={filteredAppointments}
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  setCurrentPage={setCurrentPage}
+                />
+              </>
+            )}
           </Card>
         </div>
         <div className="w-full md:w-1/3">
@@ -102,7 +126,7 @@ export function AppointmentsPage() {
               selectedAppointment={selectedAppointment}
               newComment={newComment}
               setNewComment={setNewComment}
-              handleDeleteAppointment={handleDeleteAppointment}
+              handleDeleteAppointment={() => setDialogOpen(true)}
               handleAddComment={handleAddComment}
             />
             ) : (
@@ -114,6 +138,11 @@ export function AppointmentsPage() {
           )}
         </div>
       </div>
+      <DeleteConfirmation
+        dialogOpen={dialogOpen}
+        setDialogOpen={setDialogOpen}
+        handleDelete={() => selectedAppointment && handleDeleteAppointment(selectedAppointment.id)} // Pass the id to delete
+      />
     </div>
   )
 }
