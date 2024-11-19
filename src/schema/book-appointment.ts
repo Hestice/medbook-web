@@ -17,3 +17,5 @@ export const bookAppointmentSchema = z.object({
   to: timeFormat,
   comment: z.string().optional()
 });
+
+export type EditAppointmentFormValues = z.infer<typeof bookAppointmentSchema>;
