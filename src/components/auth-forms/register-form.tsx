@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from '@/components/ui/form'
 import { registerFormSchema } from '@/schema/user'
 import { registerUser } from '@/services/user-service'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 interface RegisterFormProps {
   email: string
@@ -47,7 +48,7 @@ export default function RegisterForm({ email, onRegisterSuccess }: RegisterFormP
   return (
     <>
       <FormProvider {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
             control={form.control}
             name="email"
@@ -68,7 +69,7 @@ export default function RegisterForm({ email, onRegisterSuccess }: RegisterFormP
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Your Full Name</FormLabel>
+                <FormLabel>What is Your Name?</FormLabel>
                 <FormControl>
                   <Input placeholder="Your Name" {...field} />
                 </FormControl>
@@ -82,14 +83,19 @@ export default function RegisterForm({ email, onRegisterSuccess }: RegisterFormP
             name="role"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Role</FormLabel>
+                <FormLabel>You are Joining As...</FormLabel>
                 <FormControl>
-                  <select {...field} className="border border-gray-300 rounded-md p-2">
-                    <option value="">Select a role</option>
-                    <option value="doctor">Doctor</option>
-                    <option value="patient">Patient</option>
-                  </select>
+                  <Select {...field} value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger className="border border-gray-300 rounded-md p-2">
+                      <SelectValue placeholder="Select a Role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="doctor">Doctor</SelectItem>
+                      <SelectItem value="patient">Patient</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </FormControl>
+                <FormDescription>What are You Here For?</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -119,6 +125,7 @@ export default function RegisterForm({ email, onRegisterSuccess }: RegisterFormP
                 <FormControl>
                   <Input placeholder="Confirm password" type="password" {...field} />
                 </FormControl>
+                <FormDescription>Retype your password for confirmation</FormDescription>
                 <FormMessage />
               </FormItem>
             )}

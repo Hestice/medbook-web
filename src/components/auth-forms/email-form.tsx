@@ -37,7 +37,7 @@ export default function EmailForm({ setEmail, setIsExistingUser, setStep }: Emai
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
           name="email"
