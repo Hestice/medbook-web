@@ -24,6 +24,28 @@ export const createAvailabilities = async (availabilities: Availability[]) => {
   }
 }
 
+export const updateAvailability = async (availabilityId: string, updates: Partial<Availability>) => {
+  try {
+    const response = await fetch(`${API_URL}/api/availabilities/${availabilityId}/update`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updates),
+      credentials: 'include',
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to update availability');
+    }
+
+    const data = await response.json();
+    console.log(data.message);
+  } catch (error) {
+    console.error('Error updating availability:', error);
+  }
+};
+
 export const listAvailabilities = async () => {
   try {
     const response = await fetch(`${API_URL}/api/availabilities/`, {
@@ -92,3 +114,21 @@ export const getDoctorDetails = async (doctorId: string): Promise<Doctor> => {
     throw error
   }
 }
+
+export const deleteAvailability = async (availabilityId: string) => {
+  try {
+    const response = await fetch(`${API_URL}/api/availabilities/${availabilityId}/delete`, {
+      method: 'DELETE',
+      credentials: 'include',
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to delete availability');
+    }
+
+    const data = await response.json();
+    console.log(data.message);
+  } catch (error) {
+    console.error('Error deleting availability:', error);
+  }
+};
