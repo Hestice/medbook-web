@@ -60,14 +60,18 @@ const transformAppointments = async (apiAppointments: ApiAppointment[]): Promise
   }));
 };
 
-export const listAppointments = async (dateRange?: DateRange): Promise<Appointment[]> => {
+export const listAppointments = async (dateRange?: DateRange, limit?: number): Promise<Appointment[]> => {
   try {
-    const url = dateRange
-      ? `/api/appointments/?start_date=${dateRange.start_date}&end_date=${dateRange.end_date}`
-      : '/api/appointments/';
+    let url = '/api/appointments/';
+    if (dateRange) {
+      url += `?start_date=${dateRange.start_date}&end_date=${dateRange.end_date}`;
+    }
+    if (limit) {
+      url += url.includes('?') ? `&limit=${limit}` : `?limit=${limit}`;
+    }
 
-    const response = await fetchData(url, 'GET')
-    return transformAppointments(response)
+    const response = await fetchData(url, 'GET');
+    return transformAppointments(response);
   } catch (error) {
     console.error('Error fetching appointments:', error);
     throw error;
