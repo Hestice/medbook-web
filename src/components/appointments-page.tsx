@@ -127,6 +127,7 @@ export function AppointmentsPage() {
               setNewComment={setNewComment}
               handleDeleteAppointment={() => setDialogOpen(true)}
               handleAddComment={handleAddComment}
+              onAppointmentUpdated={fetchAppointments}
             />
             ) : (
             <Card>

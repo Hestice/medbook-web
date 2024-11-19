@@ -20,13 +20,15 @@ interface EditAppointmentDialogProps {
   onClose: () => void;
   slots: Slot[];
   loading: boolean;
+  onAppointmentUpdated: () => void;
 }
 
 export default function EditAppointmentDialog({
   appointment,
   onClose,
   slots,
-  loading
+  loading,
+  onAppointmentUpdated
 }: EditAppointmentDialogProps) {
   const [readableDate, setReadableDate] = useState(appointment.date);
   const [availableDates, setAvailableDates] = useState<string[]>([]);
@@ -78,6 +80,7 @@ export default function EditAppointmentDialog({
       const response = await updateAppointment(appointment.id, payload);
       console.log('Appointment updated successfully', response);
       onClose();
+      onAppointmentUpdated()
     } catch (error) {
       console.error('Error updating appointment:', error);
     }

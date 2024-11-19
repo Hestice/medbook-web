@@ -16,6 +16,7 @@ interface SelectedAppointmentProps {
   setNewComment: React.Dispatch<React.SetStateAction<string>>
   handleDeleteAppointment: () => void
   handleAddComment: () => void
+  onAppointmentUpdated: () => void;
 }
 
 export default function SelectedAppointment({
@@ -24,6 +25,7 @@ export default function SelectedAppointment({
     setNewComment,
     handleDeleteAppointment,
     handleAddComment,
+    onAppointmentUpdated
   }: SelectedAppointmentProps) {
   const [editDialogOpen, setEditDialogOpen] = useState(false)
   const [slots, setSlots] = useState<Slot[]>([])
@@ -104,6 +106,7 @@ export default function SelectedAppointment({
           appointment={selectedAppointment}
           slots={slots}
           loading={loading} 
+          onAppointmentUpdated={onAppointmentUpdated} 
         />
       </Dialog>
     </Card>
